@@ -1,0 +1,27 @@
+﻿# Normaliza los finales de línea automáticamente.
+# Git decide el formato correcto por archivo; nadie más tiene que pensar en esto.
+* text=auto
+
+# Código y config: siempre LF en el repositorio.
+*.cs        text eol=lf
+*.csproj    text eol=lf
+*.props     text eol=lf
+*.targets   text eol=lf
+*.json      text eol=lf
+*.sql       text eol=lf
+*.md        text eol=lf
+*.sh        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+
+# Scripts de Windows: siempre CRLF (cmd/powershell lo esperan).
+*.cmd       text eol=crlf
+*.bat       text eol=crlf
+*.ps1       text eol=crlf
+
+# Binarios: Git no los toca nunca.
+*.png       binary
+*.jpg       binary
+*.pdf       binary
+*.dll       binary
+*.snk       binary

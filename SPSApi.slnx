@@ -1,0 +1,41 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Host/">
+    <Project Path="src/Host/SPSApi.Host.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Assets/">
+    <Project Path="src/Modules/Assets/SPSApi.Modules.Assets.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Catalog/">
+    <Project Path="src/Modules/Catalog/SPSApi.Modules.Catalog.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Contracts/">
+    <Project Path="src/Modules/Contracts/SPSApi.Modules.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Customers/">
+    <Project Path="src/Modules/Customers/SPSApi.Modules.Customers.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Identity/">
+    <Project Path="src/Modules/Identity/SPSApi.Modules.Identity.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Inventory/">
+    <Project Path="src/Modules/Inventory/SPSApi.Modules.Inventory.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Profitability/">
+    <Project Path="src/Modules/Profitability/SPSApi.Modules.Profitability.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/SPSApi.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/Architecture/">
+    <Project Path="tests/Architecture/SPSApi.Tests.Architecture.csproj" />
+  </Folder>
+  <Folder Name="/tests/Integration/">
+    <Project Path="tests/Integration/SPSApi.Tests.Integration.csproj" />
+  </Folder>
+  <Folder Name="/tests/Unit/">
+    <Project Path="tests/Unit/SPSApi.Tests.Unit.csproj" />
+  </Folder>
+</Solution>
