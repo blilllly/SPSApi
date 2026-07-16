@@ -9,6 +9,12 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\" />
+    <Folder Include="Features\" />
+    <Folder Include="Features\CreateProduct\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <!-- TargetFramework, Nullable, ImplicitUsings, LangVersion -> Directory.Build.props -->
   </PropertyGroup>
