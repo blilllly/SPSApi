@@ -8,6 +8,7 @@ public class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbCo
   public DbSet<Brand> Brands => Set<Brand>();
   public DbSet<AssetModel> AssetModels => Set<AssetModel>();
   public DbSet<Product> Products => Set<Product>();
+  public DbSet<ProductImage> ProductImages => Set<ProductImage>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

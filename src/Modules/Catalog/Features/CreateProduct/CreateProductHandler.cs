@@ -32,7 +32,7 @@ public class CreateProductHandler(CatalogDbContext db)
     return Result<ProductDto>.Success(new ProductDto(
       product.Id, product.Sku, product.Name, product.Category,
       product.UnitOfMeasure, product.Barcode, product.IsActive,
-      product.EstimatedCost, product.EstimatedPageYield
+      product.EstimatedCost, product.EstimatedPageYield, []
     ));
   }
 }

@@ -19,4 +19,6 @@ public class Product
   public decimal? EstimatedCost { get; set; }
 
   public int? EstimatedPageYield { get; set; }
+
+  public ICollection<ProductImage> Images { get; private set; } = [];
 }

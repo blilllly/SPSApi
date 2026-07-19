@@ -11,5 +11,13 @@ public record ProductDto(
   string? Barcode,
   bool IsActive,
   decimal? EstimatedCost,
-  int? EstimatedPageYield
+  int? EstimatedPageYield,
+  IReadOnlyList<ProductImageDto> Images
+  );
+
+public record ProductImageDto(
+  int Id,
+  string Url,
+  int SortOrder,
+  bool IsPrimary
 );

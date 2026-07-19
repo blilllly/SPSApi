@@ -1,0 +1,10 @@
+dotnet ef migrations add Catalog_Initial `
+  --project src/Modules/Catalog `
+  --startup-project src/Host `
+  --output-dir Infrastructure/Migrations
+
+
+dotnet ef migrations add <Nombre> `
+  --project src/Modules/<Modulo> `
+  --startup-project src/Host `
+  --output-dir Infrastructure/Migrations

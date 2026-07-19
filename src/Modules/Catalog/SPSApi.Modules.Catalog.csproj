@@ -12,7 +12,11 @@
   <ItemGroup>
     <Folder Include="Dtos\" />
     <Folder Include="Features\" />
+    <Folder Include="Features\CreateAssetModel\" />
+    <Folder Include="Features\CreateBrand\" />
     <Folder Include="Features\CreateProduct\" />
+    <Folder Include="Features\ListProducts\" />
+    <Folder Include="Features\UpdateProduct\" />
   </ItemGroup>
 
   <PropertyGroup>
