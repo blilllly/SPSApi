@@ -16,11 +16,13 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     b.Property(x => x.Category).HasConversion<byte>();
     b.Property(x => x.UnitOfMeasure).HasMaxLength(10).HasDefaultValue("EA");
     b.Property(x => x.Barcode).HasMaxLength(60);
+    b.Property(x => x.PartNumber).HasMaxLength(80);
+    b.Property(x => x.IsOriginal).HasDefaultValue(false);
     b.Property(x => x.IsActive).HasDefaultValue(true);
-
     b.Property(x => x.EstimatedCost).HasPrecision(14, 2);
 
     b.HasIndex(x => x.Sku).IsUnique();
     b.HasIndex(x => x.Barcode).IsUnique(false).HasFilter("[Barcode] IS NOT NULL");
+    b.HasIndex(x => x.PartNumber).IsUnique(false).HasFilter("[PartNumber] IS NOT NULL");
   }
 }

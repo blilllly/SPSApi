@@ -13,10 +13,19 @@ public class AssetModelConfiguration : IEntityTypeConfiguration<AssetModel>
     b.HasKey(x => x.Id);
     b.Property(x => x.Name).HasMaxLength(150).IsRequired();
     b.Property(x => x.AssetType).HasConversion<byte>();
+    b.Property(x => x.PartNumber).HasMaxLength(80);
     b.Property(x => x.IsColour).HasDefaultValue(false);
 
-    b.HasOne(x => x.Brand).WithMany().HasForeignKey(x => x.BrandId).OnDelete(DeleteBehavior.Restrict);
+    b.HasOne(x => x.Brand)
+      .WithMany()
+      .HasForeignKey(x => x.BrandId)
+      .OnDelete(DeleteBehavior.Restrict);
+
     b.HasIndex(x => new { x.BrandId, x.Name }).IsUnique();
+
+    b.HasIndex(x => x.PartNumber)
+      .IsUnique(false)
+      .HasFilter("[PartNumber] IS NOT NULL");
   }
 
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SPSApi.Modules.Catalog.Domain;
@@ -7,7 +8,7 @@ using SPSApi.Modules.Catalog.Infrastructure;
 
 namespace SPSApi.Modules.Catalog.Features.CreateAssetModel;
 
-public record CreateAssetModelCommand(int BrandId, string Name, AssetType AssetType, bool IsColour);
+public record CreateAssetModelCommand(int BrandId, string Name, AssetType AssetType, string? PartNumber, bool IsColour);
 
 public static class CreateAssetModelEndpoint
 {
@@ -15,7 +16,7 @@ public static class CreateAssetModelEndpoint
   {
     app.MapPost("/api/catalog/asset-models", async (
       CreateAssetModelCommand cmd,
-      CatalogDbContext db,
+      [FromServices] CatalogDbContext db,
       CancellationToken ct
     ) =>
     {
@@ -44,19 +45,20 @@ public static class CreateAssetModelEndpoint
         BrandId = cmd.BrandId,
         Name = cmd.Name.Trim(),
         AssetType = cmd.AssetType,
+        PartNumber = string.IsNullOrWhiteSpace(cmd.PartNumber) ? null : cmd.PartNumber.Trim(),
         IsColour = isColour
       };
       db.AssetModels.Add(model);
       await db.SaveChangesAsync(ct);
 
       return Results.Created($"/api/catalog/asset-models/{model.Id}",
-        new { model.Id, model.BrandId, model.Name, model.AssetType, model.IsColour });
+        new { model.Id, model.BrandId, model.Name, model.AssetType, model.PartNumber, model.IsColour });
     }).WithTags("Catalog").WithName("CreateAssetModel");
 
     app.MapGet("/api/catalog/asset-models", async (CatalogDbContext db, CancellationToken ct) =>
       Results.Ok(await db.AssetModels.AsNoTracking()
         .OrderBy(m => m.Name)
-        .Select(m => new { m.Id, m.BrandId, m.Name, m.AssetType, m.IsColour })
+        .Select(m => new { m.Id, m.BrandId, m.Name, m.AssetType, m.PartNumber, m.IsColour })
         .ToListAsync(ct)
       )
     ).WithTags("Catalog").WithName("ListAssetModels");

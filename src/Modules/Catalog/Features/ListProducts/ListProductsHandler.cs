@@ -27,8 +27,8 @@ public class ListProductsHandler(CatalogDbContext db)
       .OrderBy(p => p.Name)
       .Select(p => new ProductDto(
           p.Id, p.Sku, p.Name, p.Category,
-          p.UnitOfMeasure, p.Barcode, p.IsActive,
-          p.EstimatedCost, p.EstimatedPageYield,
+          p.UnitOfMeasure, p.Barcode, p.PartNumber, p.IsOriginal,
+          p.IsActive, p.EstimatedCost, p.EstimatedPageYield,
           p.Images
             .OrderBy(i => i.SortOrder)
             .Select(i => new ProductImageDto(i.Id, i.Url, i.SortOrder, i.IsPrimary))

@@ -8,6 +8,8 @@ public record CreateProductCommand(
   ProductCategory Category,
   string UnitOfMeasure,
   string? Barcode,
+  string? PartNumber,
+  bool IsOriginal,
   decimal? EstimatedCost,
   int? EstimatedPageYield
 );

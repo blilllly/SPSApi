@@ -21,6 +21,8 @@ public class CreateProductHandler(CatalogDbContext db)
       Category = cmd.Category,
       UnitOfMeasure = cmd.UnitOfMeasure,
       Barcode = cmd.Barcode,
+      PartNumber = string.IsNullOrWhiteSpace(cmd.PartNumber) ? null : cmd.PartNumber.Trim(),
+      IsOriginal = cmd.IsOriginal,
       EstimatedCost = cmd.EstimatedCost,
       EstimatedPageYield = cmd.EstimatedPageYield,
       IsActive = true
@@ -31,8 +33,8 @@ public class CreateProductHandler(CatalogDbContext db)
 
     return Result<ProductDto>.Success(new ProductDto(
       product.Id, product.Sku, product.Name, product.Category,
-      product.UnitOfMeasure, product.Barcode, product.IsActive,
-      product.EstimatedCost, product.EstimatedPageYield, []
+      product.UnitOfMeasure, product.Barcode, product.PartNumber, product.IsOriginal,
+      product.IsActive, product.EstimatedCost, product.EstimatedPageYield, []
     ));
   }
 }

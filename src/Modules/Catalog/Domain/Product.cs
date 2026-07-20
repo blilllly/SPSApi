@@ -14,6 +14,10 @@ public class Product
 
   public string? Barcode { get; set; }
 
+  public string? PartNumber { get; set; }
+
+  public bool IsOriginal { get; set; }
+
   public bool IsActive { get; set; } = true;
 
   public decimal? EstimatedCost { get; set; }

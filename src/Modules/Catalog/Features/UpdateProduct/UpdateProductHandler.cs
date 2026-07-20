@@ -11,7 +11,9 @@ public class UpdateProductHandler(CatalogDbContext db)
     UpdateProductCommand cmd,
     CancellationToken ct)
   {
-    var product = await db.Products.FirstOrDefaultAsync(p => p.Id == cmd.Id, ct);
+    var product = await db.Products
+      .Include(p => p.Images)
+      .FirstOrDefaultAsync(p => p.Id == cmd.Id, ct);
 
     if (product is null)
       return Result<ProductDto>.Failure($"No existe un producto con Id {cmd.Id}.");
@@ -21,6 +23,8 @@ public class UpdateProductHandler(CatalogDbContext db)
     product.Category = cmd.Category;
     product.UnitOfMeasure = cmd.UnitOfMeasure;
     product.Barcode = cmd.Barcode;
+    product.PartNumber = string.IsNullOrWhiteSpace(cmd.PartNumber) ? null : cmd.PartNumber.Trim();
+    product.IsOriginal = cmd.IsOriginal;
     product.EstimatedCost = cmd.EstimatedCost;
     product.EstimatedPageYield = cmd.EstimatedPageYield;
     product.IsActive = cmd.IsActive;
@@ -29,8 +33,8 @@ public class UpdateProductHandler(CatalogDbContext db)
 
     return Result<ProductDto>.Success(new ProductDto(
       product.Id, product.Sku, product.Name, product.Category,
-      product.UnitOfMeasure, product.Barcode, product.IsActive,
-      product.EstimatedCost, product.EstimatedPageYield,
+      product.UnitOfMeasure, product.Barcode, product.PartNumber, product.IsOriginal,
+      product.IsActive, product.EstimatedCost, product.EstimatedPageYield,
       product.Images
         .OrderBy(i => i.SortOrder)
         .Select(i => new ProductImageDto(i.Id, i.Url, i.SortOrder, i.IsPrimary))

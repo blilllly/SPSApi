@@ -9,6 +9,8 @@ public record ProductDto(
   ProductCategory Category,
   string UnitOfMeasure,
   string? Barcode,
+  string? PartNumber,
+  bool IsOriginal,
   bool IsActive,
   decimal? EstimatedCost,
   int? EstimatedPageYield,

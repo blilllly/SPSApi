@@ -19,7 +19,8 @@ public static class UpdateProductEndpoint
     {
       var cmd = new UpdateProductCommand(
         id, body.Name, body.Category, body.UnitOfMeasure,
-        body.Barcode, body.EstimatedCost, body.EstimatedPageYield, body.IsActive
+        body.Barcode, body.PartNumber, body.IsOriginal,
+        body.EstimatedCost, body.EstimatedPageYield, body.IsActive
       );
 
       var result = await handler.HandleAsync(cmd, ct);
@@ -36,6 +37,8 @@ public record UpdateProductBody(
   ProductCategory Category,
   string UnitOfMeasure,
   string? Barcode,
+  string? PartNumber,
+  bool IsOriginal,
   decimal? EstimatedCost,
   int? EstimatedPageYield,
   bool IsActive
