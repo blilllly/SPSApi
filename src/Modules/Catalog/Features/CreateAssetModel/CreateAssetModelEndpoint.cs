@@ -8,7 +8,7 @@ using SPSApi.Modules.Catalog.Infrastructure;
 
 namespace SPSApi.Modules.Catalog.Features.CreateAssetModel;
 
-public record CreateAssetModelCommand(int BrandId, string Name, AssetType AssetType, string? PartNumber, bool IsColour);
+public record CreateAssetModelCommand(int BrandId, string Name, AssetType AssetType, string? PartNumber, int? RatedDutyCycle, bool IsColour);
 
 public static class CreateAssetModelEndpoint
 {
@@ -24,6 +24,12 @@ public static class CreateAssetModelEndpoint
         return Results.ValidationProblem(new Dictionary<string, string[]>
         {
           ["name"] = ["El nombre del modelo es obligatorio."]
+        });
+
+      if (cmd.RatedDutyCycle is <= 0)
+        return Results.ValidationProblem(new Dictionary<string, string[]>
+        {
+          ["RatedDutyCycle"] = ["El ciclo de vida debe ser mayor a cero"]
         });
 
       if (!await db.Brands.AnyAsync(b => b.Id == cmd.BrandId, ct))
@@ -45,6 +51,7 @@ public static class CreateAssetModelEndpoint
         BrandId = cmd.BrandId,
         Name = cmd.Name.Trim(),
         AssetType = cmd.AssetType,
+        RatedDutyCycle = cmd.RatedDutyCycle,
         PartNumber = string.IsNullOrWhiteSpace(cmd.PartNumber) ? null : cmd.PartNumber.Trim(),
         IsColour = isColour
       };
@@ -52,13 +59,13 @@ public static class CreateAssetModelEndpoint
       await db.SaveChangesAsync(ct);
 
       return Results.Created($"/api/catalog/asset-models/{model.Id}",
-        new { model.Id, model.BrandId, model.Name, model.AssetType, model.PartNumber, model.IsColour });
+        new { model.Id, model.BrandId, model.Name, model.AssetType, model.RatedDutyCycle, model.PartNumber, model.IsColour });
     }).WithTags("Catalog").WithName("CreateAssetModel");
 
     app.MapGet("/api/catalog/asset-models", async (CatalogDbContext db, CancellationToken ct) =>
       Results.Ok(await db.AssetModels.AsNoTracking()
         .OrderBy(m => m.Name)
-        .Select(m => new { m.Id, m.BrandId, m.Name, m.AssetType, m.PartNumber, m.IsColour })
+        .Select(m => new { m.Id, m.BrandId, m.Name, m.AssetType, m.RatedDutyCycle, m.PartNumber, m.IsColour })
         .ToListAsync(ct)
       )
     ).WithTags("Catalog").WithName("ListAssetModels");

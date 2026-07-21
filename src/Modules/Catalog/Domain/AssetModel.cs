@@ -12,6 +12,8 @@ public class AssetModel
 
   public AssetType AssetType { get; set; }
 
+  public int? RatedDutyCycle { get; set; }
+
   public string? PartNumber { get; set; }
 
   public bool IsColour { get; set; }
