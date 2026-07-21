@@ -15,8 +15,12 @@
     <Folder Include="Features\CreateAssetModel\" />
     <Folder Include="Features\CreateBrand\" />
     <Folder Include="Features\CreateProduct\" />
+    <Folder Include="Features\DeleteAssetModel\" />
+    <Folder Include="Features\DeleteBrand\" />
+    <Folder Include="Features\DeleteProduct\" />
     <Folder Include="Features\ListPartNumbers\" />
     <Folder Include="Features\ListProducts\" />
+    <Folder Include="Features\SetProductActive\" />
     <Folder Include="Features\UpdateProduct\" />
   </ItemGroup>
 
