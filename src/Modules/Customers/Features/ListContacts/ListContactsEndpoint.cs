@@ -19,11 +19,20 @@ public static class ListContactsEndpoint
       {
         var query = db.Contacts.AsNoTracking();
 
-        if (customerId is not null)
-          query = query.Where(c => c.CustomerId == customerId);
-
         if (branchId is not null)
-          query = query.Where(c => c.BranchId == branchId);
+        {
+          // Un contacto CustomerId-level (sin BranchId) sirve a todas las sucursales
+          // del cliente (ej. sistemas), aunque físicamente esté alojado en la matriz.
+          var branchCustomerId = await db.Branches.AsNoTracking()
+            .Where(b => b.Id == branchId)
+            .Select(b => (int?)b.CustomerId)
+            .FirstOrDefaultAsync(ct);
+
+          query = query.Where(c => c.BranchId == branchId ||
+            (branchCustomerId != null && c.CustomerId == branchCustomerId && c.BranchId == null));
+        }
+        else if (customerId is not null)
+          query = query.Where(c => c.CustomerId == customerId);
 
         return Results.Ok(await query
           .OrderBy(c => c.Name)
