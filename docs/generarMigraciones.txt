@@ -12,4 +12,4 @@ dotnet ef migrations add <Nombre> `
 
 dotnet ef migrations add AddPartNumberAndIsOriginal --project src/Modules/Catalog --startup-project src/Host --output-dir Infrastructure/Migrations
 
-dotnet ef database update --project src/Modules/Catalog --startup-project src/Host
+dotnet ef database update --project src/Modules/<Modulo> --startup-project src/Host
