@@ -1,4 +1,5 @@
 using SPSApi.Host;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ if (app.Environment.IsDevelopment())
 {
   await app.Services.MigrateModulesAsync();
   app.MapOpenApi();
+  app.MapScalarApiReference();
 }
 
 if (!app.Environment.IsDevelopment())
