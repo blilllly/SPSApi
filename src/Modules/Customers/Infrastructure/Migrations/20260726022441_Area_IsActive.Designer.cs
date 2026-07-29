@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPSApi.Modules.Customers.Infrastructure;
 
@@ -10,9 +11,11 @@ using SPSApi.Modules.Customers.Infrastructure;
 namespace SPSApi.Modules.Customers.Infrastructure.Migrations
 {
     [DbContext(typeof(CustomersDbContext))]
-    partial class CustomersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260726022441_Area_IsActive")]
+    partial class Area_IsActive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,6 +62,10 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
@@ -66,6 +73,14 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
+
+                    b.Property<decimal?>("Latitude")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("decimal(9,6)");
+
+                    b.Property<decimal?>("Longitude")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("decimal(9,6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -91,7 +106,7 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
                     b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -117,7 +132,10 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Contact", "customers");
+                    b.ToTable("Contact", "customers", t =>
+                        {
+                            t.HasCheckConstraint("CK_Contact_CustomerOrBranch", "[CustomerId] IS NOT NULL OR [BranchId] IS NOT NULL");
+                        });
                 });
 
             modelBuilder.Entity("SPSApi.Modules.Customers.Domain.Customer", b =>
@@ -173,69 +191,6 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsOne("SPSApi.Modules.Customers.Domain.Address", "Address", b1 =>
-                        {
-                            b1.Property<int>("BranchId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("BuildingNumber")
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
-                                .HasColumnName("BuildingNumber");
-
-                            b1.Property<string>("City")
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("City");
-
-                            b1.Property<decimal?>("Latitude")
-                                .HasPrecision(9, 6)
-                                .HasColumnType("decimal(9,6)")
-                                .HasColumnName("Latitude");
-
-                            b1.Property<decimal?>("Longitude")
-                                .HasPrecision(9, 6)
-                                .HasColumnType("decimal(9,6)")
-                                .HasColumnName("Longitude");
-
-                            b1.Property<string>("MainStreet")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("nvarchar(200)")
-                                .HasColumnName("MainStreet");
-
-                            b1.Property<string>("PostalCode")
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("PostalCode");
-
-                            b1.Property<string>("Province")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Province");
-
-                            b1.Property<string>("Reference")
-                                .HasMaxLength(300)
-                                .HasColumnType("nvarchar(300)")
-                                .HasColumnName("Reference");
-
-                            b1.Property<string>("SecondaryStreet")
-                                .HasMaxLength(200)
-                                .HasColumnType("nvarchar(200)")
-                                .HasColumnName("SecondaryStreet");
-
-                            b1.HasKey("BranchId");
-
-                            b1.ToTable("Branch", "customers");
-
-                            b1.WithOwner()
-                                .HasForeignKey("BranchId");
-                        });
-
-                    b.Navigation("Address")
-                        .IsRequired();
-
                     b.Navigation("Customer");
                 });
 
@@ -249,8 +204,7 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
                     b.HasOne("SPSApi.Modules.Customers.Domain.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Branch");
 

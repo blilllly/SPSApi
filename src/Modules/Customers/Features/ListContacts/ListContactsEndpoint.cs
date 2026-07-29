@@ -28,6 +28,9 @@ public static class ListContactsEndpoint
             .Select(b => (int?)b.CustomerId)
             .FirstOrDefaultAsync(ct);
 
+          if (customerId is not null && branchCustomerId != customerId)
+            return Results.Conflict(new { error = $"La sucursal {branchId} no pertenece al cliente {customerId}." });
+
           query = query.Where(c => c.BranchId == branchId ||
             (branchCustomerId != null && c.CustomerId == branchCustomerId && c.BranchId == null));
         }

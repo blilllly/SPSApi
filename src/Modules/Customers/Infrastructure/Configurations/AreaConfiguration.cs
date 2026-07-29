@@ -12,6 +12,7 @@ public class AreaConfiguration : IEntityTypeConfiguration<Area>
     b.HasKey(x => x.Id);
 
     b.Property(x => x.Name).HasMaxLength(100).IsRequired();
+    b.Property(x => x.IsActive).HasDefaultValue(true);
 
     b.HasOne(x => x.Branch)
       .WithMany()

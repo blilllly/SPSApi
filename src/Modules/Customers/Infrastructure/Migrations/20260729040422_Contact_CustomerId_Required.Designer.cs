@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPSApi.Modules.Customers.Infrastructure;
 
@@ -10,9 +11,11 @@ using SPSApi.Modules.Customers.Infrastructure;
 namespace SPSApi.Modules.Customers.Infrastructure.Migrations
 {
     [DbContext(typeof(CustomersDbContext))]
-    partial class CustomersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260729040422_Contact_CustomerId_Required")]
+    partial class Contact_CustomerId_Required
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

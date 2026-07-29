@@ -47,14 +47,24 @@ industria, no la traducción literal. Esto hace que el esquema mapee 1:1 cuando 
 | Cambio de controlador   | `ControllerReplacement` | El contador puede subir **o bajar**         |
 | Cambio de BICU          | `BicuReplacement`       |                                             |
 
+## Clientes
+
+| Español                       | Inglés         | Nota                                                                       |
+| ------------------------------ | -------------- | --------------------------------------------------------------------------- |
+| Cliente                        | `Customer`     | 1 Customer → N Branches                                                     |
+| RUC / identificación tributaria | `TaxId`        | Único por cliente (índice filtrado, permite varios `NULL`). Pendiente validar formato numérico |
+| Sucursal                       | `Branch`       | Tiene una `Address` (value object) con GPS (`Latitude`/`Longitude`) para que Tickets valide presencia física |
+| Dirección                      | `Address`      | Value object owned por `Branch` (misma tabla): calle principal/secundaria, número de edificio, ciudad, provincia, código postal, referencia y GPS. No se reutiliza en Customer (no tiene dirección) ni en Contact (siempre asociado a una Branch) |
+| Área                           | `Area`         | Departamento/piso/zona dentro de una sucursal. Tiene `IsActive` (soft delete); se borra en cascada con la Branch, o físicamente si no tiene historial en Tickets |
+| Contacto                       | `Contact`      | Persona de contacto de un cliente                                           |
+| Contacto corporativo           | `Contact` con `CustomerId` y sin `BranchId` | Sirve para **todas** las sucursales del cliente (ej. sistemas), aunque esté físicamente en la matriz. No significa "sin sucursal", significa "alcance = todo el cliente" |
+| Contacto de sucursal           | `Contact` con `BranchId`                    | Sirve solo a esa sucursal puntual |
+
 ## Contratos
 
 | Español                          | Inglés                  | Nota                                                                |
 | -------------------------------- | ----------------------- | ------------------------------------------------------------------- |
 | Contrato                         | `Contract`              |                                                                     |
-| Cliente                          | `Customer`              |                                                                     |
-| Sucursal                         | `Branch`                | FEHIERRO = 1 Customer, N Branches                                   |
-| Área                             | `Area`                  |                                                                     |
 | Precio por página                | `ClickCharge`           | **Término de industria.** Vive en `ContractAsset`, no en `Contract` |
 | Canon mínimo / páginas incluidas | `IncludedVolume`        | `NULL` = sin mínimo → marcar en rojo                                |
 | Renta por página                 | `CostPerPage (CPP)`     | El modelo de negocio tiene nombre                                   |

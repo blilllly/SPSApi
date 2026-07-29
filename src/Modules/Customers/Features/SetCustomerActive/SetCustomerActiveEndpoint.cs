@@ -24,6 +24,14 @@ public static class SetCustomerActiveEndpoint
       if (customer is null)
         return Results.NotFound(new { error = $"No existe un cliente con Id {id}." });
 
+      if (customer.IsActive == body.IsActive)
+        return Results.Conflict(new
+        {
+          error = body.IsActive
+            ? "El cliente ya está activo, no hace falta activarlo de nuevo."
+            : "El cliente ya está desactivado, no hace falta desactivarlo de nuevo."
+        });
+
       customer.IsActive = body.IsActive;
       await db.SaveChangesAsync(ct);
 

@@ -36,7 +36,7 @@ public static class UpdateAreaEndpoint
       area.Name = body.Name.Trim();
       await db.SaveChangesAsync(ct);
 
-      return Results.Ok(new { area.Id, area.BranchId, area.Name });
+      return Results.Ok(new { area.Id, area.BranchId, area.Name, area.IsActive });
     }
     ).WithTags("Customers").WithName("UpdateArea");
   }

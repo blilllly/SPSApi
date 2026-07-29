@@ -11,9 +11,8 @@ public class CreateContactValidator : AbstractValidator<CreateContactCommand>
     RuleFor(x => x.Phone).MaximumLength(30);
     RuleFor(x => x.Position).MaximumLength(100);
 
-    RuleFor(x => x)
-      .Must(x => x.CustomerId.HasValue || x.BranchId.HasValue)
-      .WithName("customerId")
-      .WithMessage("El contacto debe pertenecer a un cliente (CustomerId) o a una sucursal (BranchId).");
+    RuleFor(x => x.CustomerId)
+      .GreaterThan(0)
+      .WithMessage("El cliente (customerId) es obligatorio.");
   }
 }

@@ -10,17 +10,21 @@ public class CreateContactHandler(CustomersDbContext db)
 {
   public async Task<Result<ContactDto>> HandleAsync(CreateContactCommand cmd, CancellationToken ct)
   {
-    if (cmd.CustomerId is not null && !await db.Customers.AnyAsync(c => c.Id == cmd.CustomerId, ct))
-      return Result<ContactDto>.Failure($"No existe un cliente con Id {cmd.CustomerId}.");
+    var name = cmd.Name.Trim();
 
-    if (cmd.BranchId is not null && !await db.Branches.AnyAsync(b => b.Id == cmd.BranchId, ct))
-      return Result<ContactDto>.Failure($"No existe una sucursal con Id {cmd.BranchId}.");
+    if (cmd.BranchId is not null)
+    {
+      if (await db.Contacts.AnyAsync(c => c.BranchId == cmd.BranchId && c.Name == name, ct))
+        return Result<ContactDto>.Failure($"Ya existe un contacto llamado '{name}' para esta sucursal.");
+    }
+    else if (await db.Contacts.AnyAsync(c => c.CustomerId == cmd.CustomerId && c.BranchId == null && c.Name == name, ct))
+      return Result<ContactDto>.Failure($"Ya existe un contacto llamado '{name}' para este cliente.");
 
     var contact = new Contact
     {
       CustomerId = cmd.CustomerId,
       BranchId = cmd.BranchId,
-      Name = cmd.Name.Trim(),
+      Name = name,
       Email = cmd.Email?.Trim(),
       Phone = cmd.Phone?.Trim(),
       Position = cmd.Position?.Trim()

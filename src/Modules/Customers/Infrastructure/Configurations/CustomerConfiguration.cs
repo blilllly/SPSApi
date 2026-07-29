@@ -16,5 +16,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     b.Property(x => x.IsActive).HasDefaultValue(true);
 
     b.HasIndex(x => x.Name).IsUnique();
+    b.HasIndex(x => x.TaxId).IsUnique();
   }
 }

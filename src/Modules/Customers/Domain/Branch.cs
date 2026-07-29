@@ -6,8 +6,6 @@ public class Branch
   public int CustomerId { get; set; }
   public Customer Customer { get; set; } = null!;
   public string Name { get; set; } = null!;
-  public string? Address { get; set; }
-  public decimal? Latitude { get; set; }
-  public decimal? Longitude { get; set; }
+  public Address Address { get; set; } = null!;
   public bool IsActive { get; set; } = true;
 }

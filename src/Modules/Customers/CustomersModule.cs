@@ -12,6 +12,7 @@ using SPSApi.Modules.Customers.Features.DeleteBranch;
 using SPSApi.Modules.Customers.Features.DeleteContact;
 using SPSApi.Modules.Customers.Features.DeleteCustomer;
 using SPSApi.Modules.Customers.Features.ListContacts;
+using SPSApi.Modules.Customers.Features.SetAreaActive;
 using SPSApi.Modules.Customers.Features.SetBranchActive;
 using SPSApi.Modules.Customers.Features.SetCustomerActive;
 using SPSApi.Modules.Customers.Features.UpdateArea;
@@ -43,6 +44,7 @@ public class CustomersModule : IModule
     CreateAreaEndpoint.Map(endpoints);
     UpdateAreaEndpoint.Map(endpoints);
     DeleteAreaEndpoint.Map(endpoints);
+    SetAreaActiveEndpoint.Map(endpoints);
 
     // Contacts
     CreateContactEndpoint.Map(endpoints);

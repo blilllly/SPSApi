@@ -24,6 +24,14 @@ public static class SetBranchActiveEndpoint
       if (branch is null)
         return Results.NotFound(new { error = $"No existe una sucursal con Id {id}." });
 
+      if (branch.IsActive == body.IsActive)
+        return Results.Conflict(new
+        {
+          error = body.IsActive
+            ? "La sucursal ya está activa, no hace falta activarla de nuevo."
+            : "La sucursal ya está desactivada, no hace falta desactivarla de nuevo."
+        });
+
       branch.IsActive = body.IsActive;
       await db.SaveChangesAsync(ct);
 

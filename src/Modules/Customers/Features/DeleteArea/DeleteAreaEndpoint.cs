@@ -21,11 +21,11 @@ public static class DeleteAreaEndpoint
       if (area is null)
         return Results.NotFound(new { error = $"No existe un área con Id {id}." });
 
-      // TODO(Assets/Tickets): cuando existan esos módulos, verificar que el área no
-      // tenga activos instalados ni tickets asociados antes de permitir el borrado
-      // físico. Si existe historial, NO borrar — devolver un error que sugiera
-      // corregir vía Update (el área no tiene IsActive) para no afectar la
-      // reportería. Por ahora, sin activos ni tickets, el borrado es seguro.
+      // TODO(Tickets): cuando exista ese módulo, verificar que el área no tenga
+      // movimientos/tickets asociados antes de permitir el borrado físico. Si existe
+      // historial, NO borrar — devolver un error que sugiera desactivar
+      // (IsActive = false) para no afectar la reportería. Por ahora, sin tickets,
+      // el borrado es seguro.
 
       db.Areas.Remove(area);
       await db.SaveChangesAsync(ct);

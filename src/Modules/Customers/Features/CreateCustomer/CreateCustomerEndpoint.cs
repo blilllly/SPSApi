@@ -26,7 +26,18 @@ public static class CreateCustomerEndpoint
         if (await db.Customers.AnyAsync(x => x.Name == cmd.Name, ct))
           return Results.Conflict(new { error = $"El cliente '{cmd.Name}' ya existe." });
 
-        var customer = new Customer { Name = cmd.Name.Trim(), TaxId = cmd.TaxId?.Trim() };
+        var taxId = string.IsNullOrWhiteSpace(cmd.TaxId) ? null : cmd.TaxId.Trim();
+
+        if (taxId is not null && !taxId.All(char.IsDigit))
+          return Results.ValidationProblem(new Dictionary<string, string[]>
+          {
+            ["taxId"] = ["El RUC/TaxId debe contener solo dígitos."]
+          });
+
+        if (taxId is not null && await db.Customers.AnyAsync(x => x.TaxId == taxId, ct))
+          return Results.Conflict(new { error = $"Ya existe un cliente con el RUC/TaxId '{taxId}'." });
+
+        var customer = new Customer { Name = cmd.Name.Trim(), TaxId = taxId };
         db.Customers.Add(customer);
         await db.SaveChangesAsync(ct);
 
@@ -47,7 +58,7 @@ public static class CreateCustomerEndpoint
           query = query.Where(c => c.IsActive);
 
         if (!string.IsNullOrWhiteSpace(search))
-          query = query.Where(c => c.Name.Contains(search));
+          query = query.Where(c => c.Name.Contains(search) || (c.TaxId != null && c.TaxId.Contains(search)));
 
         return Results.Ok(await query
           .OrderBy(c => c.Name)
@@ -55,5 +66,16 @@ public static class CreateCustomerEndpoint
           .ToListAsync(ct));
       }
     ).WithTags("Customers").WithName("ListCustomers");
+
+    app.MapGet("/api/customers/{id:int}", async (
+      int id, [FromServices] CustomersDbContext db, CancellationToken ct) =>
+      {
+        var customer = await db.Customers.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id, ct);
+        if (customer is null)
+          return Results.NotFound(new { error = $"No existe un cliente con Id {id}." });
+
+        return Results.Ok(new { customer.Id, customer.Name, customer.TaxId, customer.IsActive });
+      }
+    ).WithTags("Customers").WithName("GetCustomerById");
   }
 }

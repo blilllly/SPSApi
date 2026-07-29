@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPSApi.Modules.Customers.Infrastructure;
 
@@ -10,9 +11,11 @@ using SPSApi.Modules.Customers.Infrastructure;
 namespace SPSApi.Modules.Customers.Infrastructure.Migrations
 {
     [DbContext(typeof(CustomersDbContext))]
-    partial class CustomersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260726040843_Branch_Address_Reference")]
+    partial class Branch_Address_Reference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,7 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
                     b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -117,7 +120,10 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Contact", "customers");
+                    b.ToTable("Contact", "customers", t =>
+                        {
+                            t.HasCheckConstraint("CK_Contact_CustomerOrBranch", "[CustomerId] IS NOT NULL OR [BranchId] IS NOT NULL");
+                        });
                 });
 
             modelBuilder.Entity("SPSApi.Modules.Customers.Domain.Customer", b =>
@@ -249,8 +255,7 @@ namespace SPSApi.Modules.Customers.Infrastructure.Migrations
                     b.HasOne("SPSApi.Modules.Customers.Domain.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Branch");
 

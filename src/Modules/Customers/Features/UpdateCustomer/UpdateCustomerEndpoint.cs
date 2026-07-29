@@ -33,8 +33,19 @@ public static class UpdateCustomerEndpoint
       if (await db.Customers.AnyAsync(c => c.Id != id && c.Name == body.Name, ct))
         return Results.Conflict(new { error = $"El cliente '{body.Name}' ya existe." });
 
+      var taxId = string.IsNullOrWhiteSpace(body.TaxId) ? null : body.TaxId.Trim();
+
+      if (taxId is not null && !taxId.All(char.IsDigit))
+        return Results.ValidationProblem(new Dictionary<string, string[]>
+        {
+          ["taxId"] = ["El RUC/TaxId debe contener solo dígitos."]
+        });
+
+      if (taxId is not null && await db.Customers.AnyAsync(c => c.Id != id && c.TaxId == taxId, ct))
+        return Results.Conflict(new { error = $"Ya existe un cliente con el RUC/TaxId '{taxId}'." });
+
       customer.Name = body.Name.Trim();
-      customer.TaxId = body.TaxId?.Trim();
+      customer.TaxId = taxId;
       await db.SaveChangesAsync(ct);
 
       return Results.Ok(new { customer.Id, customer.Name, customer.TaxId, customer.IsActive });

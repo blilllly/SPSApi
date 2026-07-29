@@ -34,23 +34,27 @@ public static class CreateAreaEndpoint
         await db.SaveChangesAsync(ct);
 
         return Results.Created($"/api/customers/areas/{area.Id}",
-          new { area.Id, area.BranchId, area.Name });
+          new { area.Id, area.BranchId, area.Name, area.IsActive });
       }
     ).WithTags("Customers").WithName("CreateArea");
 
     app.MapGet("/api/customers/areas", async (
       [FromServices] CustomersDbContext db,
       CancellationToken ct,
-      [FromQuery] int? branchId) =>
+      [FromQuery] int? branchId,
+      [FromQuery] bool includeInactive = false) =>
       {
         var query = db.Areas.AsNoTracking();
 
         if (branchId is not null)
           query = query.Where(a => a.BranchId == branchId);
 
+        if (!includeInactive)
+          query = query.Where(a => a.IsActive);
+
         return Results.Ok(await query
           .OrderBy(a => a.Name)
-          .Select(a => new { a.Id, a.BranchId, a.Name })
+          .Select(a => new { a.Id, a.BranchId, a.Name, a.IsActive })
           .ToListAsync(ct));
       }
     ).WithTags("Customers").WithName("ListAreas");

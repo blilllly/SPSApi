@@ -8,9 +8,7 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
 {
   public void Configure(EntityTypeBuilder<Contact> b)
   {
-    b.ToTable("Contact", t => t.HasCheckConstraint(
-      "CK_Contact_CustomerOrBranch",
-      "[CustomerId] IS NOT NULL OR [BranchId] IS NOT NULL"));
+    b.ToTable("Contact");
     b.HasKey(x => x.Id);
 
     b.Property(x => x.Name).HasMaxLength(200).IsRequired();
